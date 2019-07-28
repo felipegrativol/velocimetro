@@ -21,11 +21,11 @@ import { Colors } from 'react-native/Libraries/NewAppScreen';
 
 import LocationServicesDialogBox from "react-native-android-location-services-dialog-box";
 import FusedLocation from 'react-native-fused-location';
-
+import {PermissionsAndroid} from 'react-native';
 
 import NumberFormat from 'react-number-format';
 
-const { width, height } = Dimensions.get("window");
+
 
 export default class App extends Component {
  
@@ -78,6 +78,16 @@ async startGPS(){
     }
 
   async componentDidMount() {
+    
+
+    const granted = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION, {
+          title: 'Este aplicativo necessita da sua localização',
+          message: 'Permitir acesso a localização?'
+          }
+      );
+if (granted === PermissionsAndroid.RESULTS.GRANTED ) {
+
     LocationServicesDialogBox.checkLocationServicesIsEnabled({
       message: "<h2 style='color: #0af13e'>Ativar Localização?</h2>Este aplicativo necessita que o GPS esteja ativo.<br/><br/>Ativar GPS, Wi-Fi, e redes móveis para usar a localização?<br/><br/>",
       ok: "SIM",
@@ -94,6 +104,12 @@ async startGPS(){
     BackHandler.exitApp();
       Alert.alert("GPS desativado");
   });
+
+}else{
+  BackHandler.exitApp();
+}
+
+
 
   }
  
